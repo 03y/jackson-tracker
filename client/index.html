@@ -46,7 +46,7 @@
             // use CORS headers to allow cross-origin requests
             // save response to response variable
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://localhost:3000", true);
+            xhr.open("GET", "http://192.168.1.125:3000", true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
             xhr.onload = function() {
@@ -66,10 +66,12 @@
                     + json[0].author + "</b> at <i>" 
                     + parseTimeUNIX(json[0].time) + "</i> on <i>" 
                     + parseDateUNIX(json[0].time) + "</i> (" + calculateHoursAgo(json[0].time) + " hours ago).<br><br>";
+                
                 info += "Jackson was last fed <b>dinner</b> by <b>" 
                     + json[1].author + "</b> at <i>" 
                     + parseTimeUNIX(json[1].time) + "</i> on <i>" 
                     + parseDateUNIX(json[1].time) + "</i> (" + calculateHoursAgo(json[1].time) + " hours ago).<br><br>";
+                
                 info += "Jackson was last <b>walked</b> by <b>" 
                     + json[2].author + "</b> at <i>" 
                     + parseTimeUNIX(json[2].time) + "</i> on <i>" 
@@ -112,7 +114,7 @@
                 // with body containing event type and time and author
                 // use CORS headers to allow cross-origin requests
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "http://localhost:3000", true);
+                xhr.open("POST", "http://192.168.1.125:3000", true);
                 xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                 xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                 xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
@@ -121,12 +123,12 @@
                 xhr.send(data);
                 
                 // wait for response then wait a further second then refresh page
-                xhr.onload = function() {
-                    console.log("Response: " + xhr.response);
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
-                }
+                // xhr.onload = function() {
+                //     console.log("Response: " + xhr.response);
+                //     setTimeout(function() {
+                //         window.location.reload();
+                //     }, 1000);
+                // }
             }
         </script>
 
