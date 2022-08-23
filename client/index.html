@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Jackson tracker</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+
+    <body>
+        <h1>Jackson Tracker</h1>
+
+        <h2>Latest Info</h2>
+        <div id="info">
+
+        </div>
+
+        <script>
+            function parseUNIX(unix) {
+                var date = new Date(unix * 1000);
+                return date.toLocaleString();
+            }
+
+
+            // make http GET request to locahost:8080
+            // use CORS headers to allow cross-origin requests
+            // save response to response variable
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:8080", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            xhr.onload = function() {
+                response = xhr.responseText;
+                console.log("Response: " + response);
+                
+                // parse response into JSON object
+                var json = JSON.parse(response);
+
+                // show latest info in #info div
+                // json example: [{"type":"Breakfast","time":1661253601,"author":"Kyle"},{"type":"Walk","time":1661253601,"author":"Kyle"},{"type":"Dinner","time":"1661257318","author":"Mum"}]
+                var info = "";
+                for (var i = 0; i < json.length; i++) {
+                    info += json[i].type + " by " + json[i].author + " at " + parseUNIX(json[i].time) + "<br>";
+                }
+                document.getElementById("info").innerHTML = info;
+
+            };
+            xhr.send();
+        </script>
+
+
+        <h2>Update info</h2>
+        <div>
+            <form>
+                <label for="eventTypes">Choose an option:</label>
+                <select name="eventTypes" id="eventTypes">
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Walk">Walk</option>
+                </select>
+
+                <label for="author">Name:</label>
+                <input type="text" name="author" id="author">
+            </form>
+        </div>
+
+        <script>
+            function addEvent() {
+                // get event type from select
+                var eventType = document.getElementById("eventTypes").value;
+                // get author from input
+                var eventAuthor = document.getElementById("author").value;
+
+                // make http POST request to locahost:8080
+                // with body containing event type and time and author
+                // use CORS headers to allow cross-origin requests
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "http://localhost:8080", true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+                const data = "{\"type\":\"" + eventType + "\", \"time\":" + Date.now() + ", \"author\":\"" + eventAuthor + "\"}";
+                console.log('Sending data: ' + data);
+                xhr.send(data);
+                
+                // wait for response
+                xhr.onload = function() {
+                    response = xhr.responseText;
+                    console.log("Response: " + response);
+                };
+            }
+        </script>
+
+        <button onclick="addEvent()">Submit</button>
+    </body>
+</html>
