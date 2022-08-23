@@ -37,10 +37,19 @@ function Event(type, time, author) {
 
 events = new Array();
 
-// test
-events.push(new Event(EventType.Breakfast, 1661253601, 'Kyle'));
-events.push(new Event(EventType.Dinner, 1661253601, 'Kyle'));
-events.push(new Event(EventType.Walk, 1661253601, 'Kyle'));
+// load data from events.json
+// if it doesnt exist/is empty, create an array with default data
+fs.readFile('events.json', 'utf8', (err, data) => {
+    if (err) {
+        console.log('Couldnt read events.json');
+        events = new Array();
+        events.push(new Event(EventType.Breakfast, 1661234561251, 'Dad'));
+        events.push(new Event(EventType.Dinner, 1661268161251, 'Kyle'));
+        events.push(new Event(EventType.Walk, 1661264561251, 'Kyle'));
+    } else {
+        events = JSON.parse(data);
+    }
+});
 
 server.get = f => gets.push(f);
 server.post = f => posts.push(f);
@@ -71,6 +80,7 @@ server.post((req, res) => {
 
         // add new event
         events.push(new Event(parsed.type, parsed.time, parsed.author));
+        console.log('Added new event:', parsed);
 
         // save json file
         fs.writeFileSync('events.json', JSON.stringify(events));
@@ -88,5 +98,5 @@ server.on('request', (req, res) => {
     }
 });
 
-server.listen(8080);
-console.log('Server running on port 8080');
+server.listen(3000);
+console.log('Server running on port 3000');
