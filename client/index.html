@@ -1,23 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
     <head>
         <title>Jackson tracker</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Crimson+Pro">
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel='stylesheet' href='css/style.css'>
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Crimson+Pro'>
 
     </head>
 
     <body>
-        <div class="container">
-            <img id="jackson-image" src="images/jackson.jpg" alt="Jackson">
+        <div class='container'>
+            <img id='jackson-image' src='images/jackson.jpg' alt='Jackson'>
 
-            <h1 id="jackson-title">Jackson tracker</h1>
+            <h1 id='jackson-title'>Jackson tracker</h1>
         </div>
         
         <h2>Latest Info</h2>
-        <div id="info">
+        <div id='info'>
             <p>Loading..</p>
         </div>
 
@@ -46,38 +46,52 @@
             // use CORS headers to allow cross-origin requests
             // save response to response variable
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://192.168.1.125:3000", true);
-            xhr.setRequestHeader("Content-Type", "application/json");
-            xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            xhr.open('GET', 'http://192.168.1.125:3000', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
             xhr.onload = function() {
                 response = xhr.responseText;
-                console.log("Response: " + response);
+                console.log('Response: ' + response);
                 
                 // parse response into JSON object
                 var json = JSON.parse(response);
 
                 // show latest info in #info div
-                // json example: [{"type":"Breakfast","time":1661253601,"author":"Kyle"},{"type":"Walk","time":1661253601,"author":"Kyle"},{"type":"Dinner","time":"1661257318","author":"Mum"}]
-                var info = "";
-                // for (var i = 0; i < json.length; i++) {
-                //     info += json[i].type + " by " + json[i].author + " at " + parseUNIX(json[i].time) + "<br>";
-                // }
-                info += "Jackson was last fed <b>breakfast</b> by <b>" 
-                    + json[0].author + "</b> at <i>" 
-                    + parseTimeUNIX(json[0].time) + "</i> on <i>" 
-                    + parseDateUNIX(json[0].time) + "</i> (" + calculateHoursAgo(json[0].time) + " hours ago).<br><br>";
-                
-                info += "Jackson was last fed <b>dinner</b> by <b>" 
-                    + json[1].author + "</b> at <i>" 
-                    + parseTimeUNIX(json[1].time) + "</i> on <i>" 
-                    + parseDateUNIX(json[1].time) + "</i> (" + calculateHoursAgo(json[1].time) + " hours ago).<br><br>";
-                
-                info += "Jackson was last <b>walked</b> by <b>" 
-                    + json[2].author + "</b> at <i>" 
-                    + parseTimeUNIX(json[2].time) + "</i> on <i>" 
-                    + parseDateUNIX(json[2].time) + "</i> (" + calculateHoursAgo(json[2].time) + " hours ago).<br><br>";
-                document.getElementById("info").innerHTML = info;
+                // json example: [{'type':'Breakfast','time':1661253601,'author':'Kyle'},{'type':'Walk','time':1661253601,'author':'Kyle'},{'type':'Dinner','time':'1661257318','author':'Mum'}]
+                var info = '';
 
+                for (var i = 0; i < json.length; i++) {
+                    var type = json[i].type;
+                    var time = parseDateUNIX(json[i].time);
+                    var author = json[i].author;
+                    var hoursAgo = calculateHoursAgo(json[i].time);
+                    var timeAgo = '';
+                    if (hoursAgo == 0) {
+                        timeAgo = 'less than an hour ago';
+                    } else if (hoursAgo == 1) {
+                        timeAgo = '1 hour ago';
+                    } else {
+                        timeAgo = hoursAgo + ' hours ago';
+                    }
+                    
+                    if (type === 'Breakfast') {
+                        info += 'Jackson was last fed <b>breakfast</b> by <b>' 
+                            + json[i].author + '</b> at ' 
+                            + parseTimeUNIX(json[i].time) + ' on ' 
+                            + parseDateUNIX(json[i].time) + ' (<b>' + timeAgo + '</b>).<br><br>';
+                    } else if (type === 'Dinner') {
+                        info += 'Jackson was last fed <b>dinner</b> by <b>' 
+                            + json[i].author + '</b> at ' 
+                            + parseTimeUNIX(json[i].time) + ' on ' 
+                            + parseDateUNIX(json[i].time) + ' (<b>' + timeAgo + '</b>).<br><br>';
+                    } else if (type === 'Walk') {
+                        info += 'Jackson was last <b>walked</b> by <b>' 
+                            + json[i].author + '</b> at ' 
+                            + parseTimeUNIX(json[i].time) + ' on ' 
+                            + parseDateUNIX(json[i].time) + ' (<b>' + timeAgo + '</b>).<br><br>';
+                    }
+                }
+                document.getElementById('info').innerHTML = info;
             };
             xhr.send();
         </script>
@@ -86,19 +100,19 @@
         <h2>Update info</h2>
         <div>
             <form>
-                <label for="eventType">Choose an option:</label>
-                <select name="eventType" id="eventType">
-                    <option value="Breakfast">Breakfast</option>
-                    <option value="Dinner">Dinner</option>
-                    <option value="Walk">Walk</option>
+                <label for='eventType'>Choose an option:</label>
+                <select name='eventType' id='eventType'>
+                    <option value='Breakfast'>Breakfast</option>
+                    <option value='Dinner'>Dinner</option>
+                    <option value='Walk'>Walk</option>
                 </select>
-
-                <label for="author">Name:</label>
-                <select name="eventAuthor" id="eventAuthor">
-                    <option value="Kyle">Kyle</option>
-                    <option value="Robert">Robert</option>
-                    <option value="Mum">Mum</option>
-                    <option value="Dad">Dad</option>
+                
+                <label for='author'>Name:</label>
+                <select name='eventAuthor' id='eventAuthor'>
+                    <option value='Kyle'>Kyle</option>
+                    <option value='Robert'>Robert</option>
+                    <option value='Mum'>Mum</option>
+                    <option value='Dad'>Dad</option>
                 </select>
             </form>
         </div>
@@ -106,25 +120,25 @@
         <script>
             function addEvent() {
                 // get event type from select
-                var eventType = document.getElementById("eventType").value;
+                var eventType = document.getElementById('eventType').value;
                 // get author from input
-                var eventAuthor = document.getElementById("eventAuthor").value;
+                var eventAuthor = document.getElementById('eventAuthor').value;
 
                 // make http POST request to locahost:3000
                 // with body containing event type and time and author
                 // use CORS headers to allow cross-origin requests
                 var xhr = new XMLHttpRequest();
-                xhr.open("POST", "http://192.168.1.125:3000", true);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-                xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-                const data = "{\"type\":\"" + eventType + "\", \"time\":" + Date.now() + ", \"author\":\"" + eventAuthor + "\"}";
+                xhr.open('POST', 'http://192.168.1.125:3000', true);
+                xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+                const data = '{\"type\":\"' + eventType + '\", \"time\":' + Date.now() + ', \"author\":\"' + eventAuthor + '\"}';
                 console.log('Sending data: ' + data);
                 xhr.send(data);
                 
                 // wait for response then wait a further second then refresh page
                 xhr.onload = function() {
-                    console.log("Response: " + xhr.response);
+                    console.log('Response: ' + xhr.response);
                     setTimeout(function() {
                         window.location.reload();
                     }, 1000);
@@ -132,6 +146,6 @@
             }
         </script>
 
-        <button onclick="addEvent()">Submit</button>
+        <button onclick='addEvent()'>Submit</button>
     </body>
 </html>
