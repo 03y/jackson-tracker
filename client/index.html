@@ -123,12 +123,12 @@
                 xhr.send(data);
                 
                 // wait for response then wait a further second then refresh page
-                // xhr.onload = function() {
-                //     console.log("Response: " + xhr.response);
-                //     setTimeout(function() {
-                //         window.location.reload();
-                //     }, 1000);
-                // }
+                xhr.onload = function() {
+                    console.log("Response: " + xhr.response);
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000);
+                }
             }
         </script>
 
