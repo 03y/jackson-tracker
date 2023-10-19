@@ -46,7 +46,7 @@
             // use CORS headers to allow cross-origin requests
             // save response to response variable
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'http://192.168.1.125:3000', true);
+            xhr.open('GET', 'http://localhost:3000', true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
             xhr.onload = function() {
@@ -128,7 +128,7 @@
                 // with body containing event type and time and author
                 // use CORS headers to allow cross-origin requests
                 var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'http://192.168.1.125:3000', true);
+                xhr.open('POST', 'http://localhost:3000', true);
                 xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
                 xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
